@@ -1,0 +1,138 @@
+*{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+#tudo{
+    min-width: 500px;
+    max-width: 600px;
+    border-radius: 43px;
+    border: 3px rgb(50, 50, 50) solid;
+    margin: 0 auto 0 auto;
+}
+header{
+    height: 100px;
+    background: linear-gradient(180deg, rgb(50, 50, 50) 0%, rgb(50, 50, 50) 80%, rgba(255,255,255,0) 100%);
+    padding: 0 20px 20px 40px;
+    border-radius: 40px 40px 0 0;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+}
+#container {
+    padding: 0 30px 30px 30px;
+}
+.divisoria{
+    border: 1px rgb(50, 50, 50) solid;
+    margin: 10px 0 10px 0;
+}
+h1{
+    color: white;
+    margin: 20px 0 5px 0;
+}
+h2 {
+    color: #333;
+}
+p{
+ margin: 3px;
+}
+
+#battleInfo {
+    margin: 20px;
+}
+
+#endBattle {
+    margin-top: 50px;
+}
+#character-selection {
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+}
+#habAtiva button , #habPassiva button {
+    width: 350px;
+    padding: 10px;
+    margin-bottom: 5px;
+    background-color: #f2f2f2;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+  }
+
+#habPassiva {
+    display: flex;
+    flex-direction: column;
+}
+#habAtiva {
+    display: flex;
+    flex-direction: column;
+}
+.player-info, .enemy-info{
+    padding: 0 5px 0 10px;
+    margin: 15px 0 15px 0;
+    border-radius: 5px;
+    border: 2px rgb(212, 212, 212) solid;
+}
+#enemy-barra, #player-barra{
+    transition: width 0.5s ease;
+    width: 1px;
+    padding: 10px;
+    background: linear-gradient(180deg, rgba(0,223,7,1) 0%, rgba(13,103,0,1) 100%);
+    border-radius: 10px;
+    border: 1px #333 solid;
+}
+.barra{
+    display: flex;
+    align-items: center;
+}
+#playerHpNum, #enemyHpNum {
+    color: green;
+    transition: opacity 1s ease;
+    font-size: 24px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-left: 5px;
+    font-weight: bold;
+}
+#buttons{
+    display: flex;
+    align-items: center; /* Centraliza verticalmente */
+    justify-content: center; /* Centraliza horizontalmente */
+}
+#buttons button{
+    transition: font-size 0.5s ease;
+    width: 50%;
+    height: 40px;
+    margin: 0 5px 5px 5px;
+    background-color: #f2f2f2;
+    border: 1px rgb(50, 50, 50) solid;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+#buttons button:disabled, #buttons button:disabled:hover {
+    font-size: 16px;
+    cursor: progress;
+    background-color: #d6d6d6;
+    border: 1px rgb(110, 110, 110) solid;
+    display: none;
+  }
+#buttons button:hover {
+    font-size: 17px;
+    cursor: pointer;
+    background-color: #dbdbdb;
+  }
+  #narrador{
+    color: white;
+  }
+  @media (max-width: 700px) {
+
+    #tudo{
+        width: 500px;
+        border-radius: 43px;
+        border: 3px rgb(50, 50, 50) solid;
+        margin: 0 auto 0 auto;
+    }
+
+
+  }

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Imagem em Base64</title>
+  <script>
+    function gerarImagemAleatoria() {
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+
+      canvas.width = 200;
+      canvas.height = 200;
+
+      for (let x = 0; x < 200; x++) {
+        for (let y = 0; y < 200; y++) {
+          const r = Math.floor(Math.random() * 256);
+          const g = Math.floor(Math.random() * 256);
+          const b = Math.floor(Math.random() * 256);
+          context.fillStyle = `rgb(${r}, ${g}, ${b})`;
+          context.fillRect(x, y, 1, 1);
+        }
+      }
+
+      const base64Image = canvas.toDataURL('image/png').replace(/^data:image\/png;base64,/, '');
+      
+      const imageElement = document.getElementById('random-image');
+      imageElement.src = `data:image/png;base64,${base64Image}`;
+    }
+  </script>
+</head>
+<body>
+  <h1>Imagem Aleatória em Base64</h1>
+  <button onclick="gerarImagemAleatoria()">Gerar Imagem</button>
+  <br>
+  <img id="random-image" alt="Imagem Aleatória">
+</body>
+</html>

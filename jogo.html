@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+    <div id="tudo">
+        <header>
+            <h1 id="nomeJogo" tabindex="-1" >RPG por Turnos</h1>
+            <p><span aria-live="polite" id="narrador">Um joguinho feito com o ❤️</span></p>
+        </header>
+        <div id="container">
+            <div id="habPassiva">
+                <h2>Habilidade Passiva</h2>
+                <p>Escolha a habilidade que sempre ficara ativa:</p>
+                <button onclick="selectHabPas(3)" aria-label="Escolher Balanceado: Vida e dano equilibrados.">🧘‍♂️ Balanceado:</br>Vida e dano equilibrados.</button>
+                <button onclick="selectHabPas(1)" aria-label="Escolher Berzeker: Aplica mais dano, mas recebe mais dano.">👹 Berzeker:</br>Aplica mais dano, mas recebe mais dano.</button>
+                <button onclick="selectHabPas(2)" aria-label="Escolher Vampirismo: Se cura ao aplicar dano.">🧛 Vampirismo:</br>Se cura ao aplicar dano.</button>
+                <button onclick="selectHabPas(5)" aria-label="Escolher Habilidoso: Pode usar habilidade uma vez a mais.">🧙 Habilidoso:</br>Pode usar habilidade uma vez a mais.</button>
+                <button onclick="selectHabPas(0)" aria-label="Escolher Resistente: Dobro de vida, mas pouco dano.">🛡️ Resistente:</br>Dobro de vida, mas pouco dano.</button>
+                <button onclick="selectHabPas(4)" aria-label="Escolher Lutador: Muito mais vida e dano, mas sem habilidade.">💪 Lutador:</br>Muito mais vida e dano, mas sem habilidade.</button>
+
+            </div>
+            <div id="habAtiva" style="display: none;">
+                <h2>Habilidade Ativa</h2>
+                <p>Escolha a habilidade que usara em combate:</p>
+                <button onclick="selectHabAt(0)" aria-label="Regenerar: Cura 40% de vida.">💚 Regenerar:</br>Cura 40% de vida.</button>
+                <button onclick="selectHabAt(1)" aria-label="Ataque Duplo: Executa dois ataques.">⚔️ Ataque Duplo:</br>Executa dois ataques.</button>
+                <button onclick="selectHabAt(2)" aria-label="Ataque Atordoante: Oponente perde o próximo turno.">🔨 Ataque Atordoante:</br>Oponente perde o próximo turno.</button>
+                <button onclick="selectHabAt(3)" aria-label="Ataque Vampirico: Aplica dano e cura a quantidade de dano aplicado.">🩸 Ataque Vampirico:</br>Aplica dano e cura a quantidade de dano aplicado.</button>
+                <button onclick="selectHabAt(4)" aria-label="Mata Gigantes: Aplica dano igual a 40% da vida do oponente.">💥 Mata Gigantes:</br>Aplica dano igual a 40% da vida do oponente.</button>
+            </div>
+
+            <div id="battle" style="display: none;">
+                <h2>Batalha - Turno <span id="turnos">1</span></h2>
+                <div id="battle-info">
+                    <div class="enemy-info">
+                        <p aria-label='Oponente' id="enemy-name">Nome do oponente</p>
+                        <div class="barra">
+                            <div  id="enemy-barra"></div><span id="enemyHpNum">3</span>
+                        </div>
+                        <p>  Pontos de Vida: <span id="enemy-hp">000</span> <br>  Habilidade: <span id="enemy-sp">0</span></p>
+                    </div>
+                    <div class="player-info">
+                        <p aria-label='Jogador1' id="player-name">Jogador</p>
+                        <div class="barra">
+                            <div id="player-barra"></div><span id="playerHpNum">3</span>
+                        </div>
+                        <p> Pontos de Vida: <span id="player-hp">000</span> <br> Habilidade: <span id="player-sp">0</span></p>
+                    </div>
+
+                    <div id="buttons">
+                        <!-- Botões de ação -->
+                        <button id="iniciar-btn" onclick="inicioBattle()">Iniciar Combate</button>
+                        <button disabled id="attack-btn" onclick="attack()" aria-label="Ataque básico">🗡️ Ataque básico</button>
+                        <button disabled id="ability-btn" onclick="ability()">Habilidade</button>
+                    </div>
+                </div>
+            </div>
+            <div class="divisoria"></div>
+            <p>Vitorias: <span id="vitorias">0</span></p>
+            <div class="buttons_menu">
+                <button onclick="restart_game()">Recomeçar</button>
+                </br>
+                <button onclick="proximoOponente()">Próximo Oponente </button>
+            </div>
+
+        </div>
+
+        <script src="script.js"></script>
+    </div>
+</body>
+</html>
