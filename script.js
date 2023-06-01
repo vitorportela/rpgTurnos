@@ -135,6 +135,7 @@ class personagem{
         this.stun = stun_status;
         stun_status = 0;
         this.danoRecebido = Math.ceil(valor - (valor * this.defesa));
+        damageSound(this.danoRecebido);
         this.hp -= this.danoRecebido;
     }
     efetuar_ataque() {
@@ -181,21 +182,26 @@ function nomeAleatorio() {
 
 
 function selectHabPas(num){
- habilidade_passiva = num;
- focarElemento(document.getElementById('nomeJogo'));//acessibilidade
- if(num===4){
-    selectHabAt(null);
- }else{
-    document.getElementById("habPassiva").style.display = "none";
-    document.getElementById("habAtiva").style.display = "flex";
- }
+buttonSound();
+    habilidade_passiva = num;
+    focarElemento(document.getElementById('nomeJogo'));//acessibilidade
+    if(num===4){
+        selectHabAt(null);
+    }else{
+        document.getElementById("habPassiva").style.display = "none";
+        document.getElementById("habAtiva").style.display = "flex";
+    }
 }
 function selectHabAt(num){
+    buttonSound();
     focarElemento(document.getElementById('nomeJogo'));//acessibilidade
     habilidade_ativa = num;
     document.getElementById("habPassiva").style.display = "none";
     document.getElementById("habAtiva").style.display = "none";
     document.getElementById("battle").style.display = "block";
+    document.getElementById('iniciar-btn').style.display = 'block';
+    document.getElementById('attack-btn').style.display = 'none';
+    document.getElementById('ability-btn').style.display = 'none';
     createPlayer(habilidade_passiva,habilidade_ativa);
     createEnemy();
     updateHP();
@@ -239,6 +245,7 @@ function createEnemy() {
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Fluxo do jogo>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 function inicioBattle(){
+    buttonSound();
     document.getElementById('iniciar-btn').style.display = 'none';
     document.getElementById('attack-btn').style.display = 'block';
     document.getElementById('ability-btn').style.display = 'block';
@@ -248,7 +255,9 @@ function inicioBattle(){
         timeoutId = setTimeout(function() {
             updateNarrador('Oponente possui '+ enemyHP +' pontos de vida e '+ enemy.habNum + ' habilidade.');
             timeoutId = setTimeout(function() {
-                updateNarrador('Iniciando turno '+ turno +', Turno do Jogador.');
+                updateNarrador('Iniciando turno '+ turno +', vez do Jogador.');
+                document.getElementById('enemy-info').style.borderColor = 'rgb(212, 212, 212)';
+                document.getElementById('player-info').style.borderColor = 'rgb(202 130 0)';
                 timeoutId = setTimeout(function() {
                     updateNarrador('Jogador, escolha sua ação...');
 
@@ -263,7 +272,7 @@ function inicioBattle(){
 }
 //vez do oponente
 function mudandoTurno(){
-    timer = 2000;
+    timer = 1500;
     if(player.stun==0){
         var mensagem1 = '';
         var mensagem2 = '';
@@ -291,23 +300,20 @@ function mudandoTurno(){
     timer += 500;
     timeoutId = setTimeout(function() {
         //Teste de Vida
-        if(enemyHP<=0){
-            victory();
-            clearTimeout(timeoutId);
-            return;
-        }
-        if(playerHP<=0){
-            defeat();
-            clearTimeout(timeoutId);
+        if(enemyHP<=0||playerHP<=0){
+            destiny();
             return;
         }
         updateNarrador('Jogador com '+playerHP+' de vida e Oponente com '+enemyHP+' de vida.');        
-        timer = 2000;
+        timer = 4000;
         timeoutId = setTimeout(function() {
             //----------------------------------------------turno do oponente
-            updateNarrador('Turno do Oponente...');
-            timer = 2000;
+            updateNarrador('Vez do Oponente...');
+            document.getElementById('player-info').style.borderColor = 'rgb(212, 212, 212)';
+            document.getElementById('enemy-info').style.borderColor = 'rgb(202 130 0)';
+            timer = 4000;
             timeoutId = setTimeout(function() {
+                timer = 1500;
                 if(enemy.stun==0){
                     var mensagem1 = '';
                     var mensagem2 = '';
@@ -339,25 +345,21 @@ function mudandoTurno(){
                 timer += 500;
                 timeoutId = setTimeout(function() {
                     //Teste de Vida
-                    if(enemyHP<=0){
-                        victory();
-                        clearTimeout(timeoutId);
-                        return;
+                    if(enemyHP<=0||playerHP<=0){
+                        destiny();
+                        return;                       
                     }
-                    if(playerHP<=0){
-                        defeat();
-                        clearTimeout(timeoutId);
-                        return;
-                    }
-                    //atualizacao de turno
-                    turno++;
-                    document.getElementById("turnos").textContent = turno;
                     //-------------------------------------turno do jogador
                     updateNarrador('Jogador com '+playerHP+' de vida e Oponente com '+enemyHP+' de vida.');
-                    timer = 6000;
+                    timer = 4000;
                     timeoutId = setTimeout(function() {
-                        updateNarrador('Iniciando turno '+ turno +', Turno do Jogador.');
-                        timer = 2000;
+                        //atualizacao de turno
+                        turno++;
+                        document.getElementById("turnos").textContent = turno;
+                        updateNarrador('Iniciando turno '+ turno +', Vez do Jogador.');
+                        document.getElementById('enemy-info').style.borderColor = 'rgb(212, 212, 212)';
+                        document.getElementById('player-info').style.borderColor = 'rgb(202 130 0)';
+                        timer = 3000;
                         timeoutId = setTimeout(function() {
                             if(player.stun==0){
                                 updateNarrador('Jogador, escolha sua ação...');
@@ -376,18 +378,39 @@ function mudandoTurno(){
     }, timer);
 }
 // Função de vitória
+
+function destiny(){
+    if(enemyHP<=0){
+        victory();
+        document.getElementById('attack-btn').style.display = 'none';
+        document.getElementById('ability-btn').style.display = 'none';
+        document.getElementById('prox-btn').style.display = 'block';
+    }
+    if(playerHP<=0){
+        defeat();
+        clearTimeout(timeoutId);
+        document.getElementById('attack-btn').style.display = 'none';
+        document.getElementById('ability-btn').style.display = 'none';
+        document.getElementById('prox-btn').style.display = 'block';
+    }
+}
 function victory() {
     numero_vitorias++;
+    musicaVitoria();
     document.getElementById("vitorias").textContent = numero_vitorias;
     updateNarrador("Oponente está com 0 pontos de vida. Você venceu!");
 }
 // Função de derrota
 function defeat() {
+    musicaDerrota();
     numero_vitorias=0;
     updateNarrador("Jogador está com 0 pontos de vida. Você perdeu!");
 }
 // Função de restart
 function restart_game(){
+    clearTimeout(timeoutId);
+    buttonSound();
+    inicioBattle();
     focarElemento(document.getElementById('nomeJogo'));
     restart_atributes();
     numero_vitorias=0;
@@ -398,8 +421,10 @@ function restart_game(){
 }
 
 function proximoOponente(){
-    restart_atributes();
     clearTimeout(timeoutId);
+    buttonSound()
+    restart_atributes();
+    document.getElementById('prox-btn').style.display = 'none';
     document.getElementById("habPassiva").style.display = "none";
     document.getElementById("habAtiva").style.display = "none";
     document.getElementById("battle").style.display = "block";
@@ -419,7 +444,7 @@ function restart_atributes(){
     danoTotalEnemy=0;
     curaTotalPlayer=0;
     curaTotalEnemy=0;
-    turno=0;
+    turno=1;
 }
 //Funcao Narrador <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 function updateNarrador(fala) {
@@ -500,6 +525,7 @@ function updateHP() {
 
 // Função de ataque
 function attack() {
+    buttonSound();
     especial = player.habNum;
     document.getElementById('attack-btn').disabled = true;
     document.getElementById('ability-btn').disabled = true;
@@ -510,6 +536,7 @@ function attack() {
 
 // Função de habilidade
 function ability() {
+    buttonSound();
     especial = player.habNum;
     document.getElementById('attack-btn').disabled = true;
     document.getElementById('ability-btn').disabled = true;
@@ -527,3 +554,138 @@ function focarElemento(input){
         input.setAttribute('tabindex', '-1');
     },200);
 }
+
+/////////////////Musica///////////////////
+// Criação do contexto de áudio
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+
+function musicaVitoria(){
+    var oscillatorConfigs = [
+        { frequency: 523.25, duration: 250 },  // Dó
+        { frequency: 659.25, duration: 200 },  // Mi
+        { frequency: 783.99, duration: 200 },  // Sol
+        { frequency: 1046.50, duration: 400 }  // Dó (uma oitava acima)
+      ];
+  tocarMusica(oscillatorConfigs, 0.1);
+}
+
+function musicaDerrota() {
+    var oscillatorConfigs = [
+      { frequency: 261.63, duration: 300 },  // Dó
+      { frequency: 220, duration: 300 },     // Lá
+      { frequency: 196, duration: 300 },     // Fá
+      { frequency: 174.61, duration: 600 }   // Ré
+    ];
+  
+    tocarMusica(oscillatorConfigs, 0.2); // Volume de 50%
+  }
+  
+  // Função para criar e reproduzir um oscilador com volume ajustável
+  function playOscillator(frequency, duration, volume) {
+    const audioContext = new AudioContext();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+  
+    oscillator.frequency.value = frequency;
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    gainNode.gain.value = volume;
+  
+    oscillator.start();
+    setTimeout(() => {
+      oscillator.stop();
+      audioContext.close();
+    }, duration);
+  }
+  
+  // Reproduzir a "música" com volume ajustável
+  function tocarMusica(musica, volume) {
+    var currentTime = 0;
+    musica.forEach((config) => {
+      setTimeout(() => {
+        playOscillator(config.frequency, config.duration, volume);
+      }, currentTime);
+      currentTime += config.duration;
+    });
+  }
+
+//---------------------
+
+function damageSound(valor) {
+    // Configurações do envelope ADSR
+    const attackTime = 0.1 + (valor/100) ;  // Tempo de ataque em segundos
+    const decayTime = 0.1 + (valor/200) ;   // Tempo de decay em segundos
+    const sustainLevel = 0.5;  // Nível de sustain entre 0 e 1
+    const releaseTime = 0.1 + (valor/150) //0.4;  // Tempo de release em segundos
+  
+    // Configurações do oscilador
+    const frequency = 100;  // Frequência do som de dano
+    const duration = attackTime + decayTime + releaseTime;  // Duração total do som
+  
+    // Criação do oscilador
+    const oscillator = audioContext.createOscillator();
+    oscillator.frequency.value = frequency;
+    
+    // Criação do envelope ADSR
+    const gainNode = audioContext.createGain();
+    const currentTime = audioContext.currentTime;
+  
+    // Configuração do envelope
+    gainNode.gain.setValueAtTime(0, currentTime);
+    gainNode.gain.linearRampToValueAtTime(1, currentTime + attackTime);
+    gainNode.gain.linearRampToValueAtTime(sustainLevel, currentTime + attackTime + decayTime);
+    gainNode.gain.setValueAtTime(sustainLevel, currentTime + duration - releaseTime);
+    gainNode.gain.linearRampToValueAtTime(0, currentTime + duration);
+  
+    // Conecta o oscilador ao envelope e ao destino de áudio
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+  
+    // Inicia o oscilador
+    oscillator.start();
+  
+    // Finaliza o oscilador após a duração do som
+    setTimeout(() => {
+      oscillator.stop();
+    }, duration * 1000);  // Multiplica por 1000 para converter de segundos para milissegundos
+  }
+
+  function buttonSound() {
+    // Configurações do envelope ADSR
+    const attackTime = 0.04;  // Tempo de ataque em segundos
+    const decayTime = 0.04;   // Tempo de decay em segundos
+    const sustainLevel = 0.1;  // Nível de sustain entre 0 e 1
+    const releaseTime = 0.2;//0.4;  // Tempo de release em segundos
+  
+    // Configurações do oscilador
+    const frequency = 400;  // Frequência do som de dano
+    const duration = attackTime + decayTime + releaseTime;  // Duração total do som
+  
+    // Criação do oscilador
+    const oscillator = audioContext.createOscillator();
+    oscillator.frequency.value = frequency;
+    
+    // Criação do envelope ADSR
+    const gainNode = audioContext.createGain();
+    const currentTime = audioContext.currentTime;
+  
+    // Configuração do envelope
+    gainNode.gain.setValueAtTime(0, currentTime);
+    gainNode.gain.linearRampToValueAtTime(1, currentTime + attackTime);
+    gainNode.gain.linearRampToValueAtTime(sustainLevel, currentTime + attackTime + decayTime);
+    gainNode.gain.setValueAtTime(sustainLevel, currentTime + duration - releaseTime);
+    gainNode.gain.linearRampToValueAtTime(0, currentTime + duration);
+  
+    // Conecta o oscilador ao envelope e ao destino de áudio
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+  
+    // Inicia o oscilador
+    oscillator.start();
+  
+    // Finaliza o oscilador após a duração do som
+    setTimeout(() => {
+      oscillator.stop();
+    }, duration * 1000);  // Multiplica por 1000 para converter de segundos para milissegundos
+  }

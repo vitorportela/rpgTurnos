@@ -36,14 +36,14 @@
             <div id="battle" style="display: none;">
                 <h2>Batalha - Turno <span id="turnos">1</span></h2>
                 <div id="battle-info">
-                    <div class="enemy-info">
+                    <div id="enemy-info">
                         <p aria-label='Oponente' id="enemy-name">Nome do oponente</p>
                         <div class="barra">
                             <div  id="enemy-barra"></div><span id="enemyHpNum">3</span>
                         </div>
                         <p>  Pontos de Vida: <span id="enemy-hp">000</span> <br>  Habilidade: <span id="enemy-sp">0</span></p>
                     </div>
-                    <div class="player-info">
+                    <div id="player-info">
                         <p aria-label='Jogador1' id="player-name">Jogador</p>
                         <div class="barra">
                             <div id="player-barra"></div><span id="playerHpNum">3</span>
@@ -56,6 +56,7 @@
                         <button id="iniciar-btn" onclick="inicioBattle()">Iniciar Combate</button>
                         <button disabled id="attack-btn" onclick="attack()" aria-label="Ataque básico">🗡️ Ataque básico</button>
                         <button disabled id="ability-btn" onclick="ability()">Habilidade</button>
+                        <button id="prox-btn" onclick="proximoOponente()">Próximo Oponente </button>
                     </div>
                 </div>
             </div>
@@ -65,6 +66,7 @@
                 <button onclick="restart_game()">Recomeçar</button>
                 </br>
                 <button onclick="proximoOponente()">Próximo Oponente </button>
+
             </div>
 
         </div>

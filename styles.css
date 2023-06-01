@@ -16,8 +16,6 @@ header{
     border-radius: 40px 40px 0 0;
     display: flex;
     flex-direction: column;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-
 }
 #container {
     padding: 0 30px 30px 30px;
@@ -67,7 +65,7 @@ p{
     display: flex;
     flex-direction: column;
 }
-.player-info, .enemy-info{
+#player-info, #enemy-info{
     padding: 0 5px 0 10px;
     margin: 15px 0 15px 0;
     border-radius: 5px;
