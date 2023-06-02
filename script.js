@@ -4,6 +4,7 @@ var numero_vitorias = 0;
 var habilidade_passiva = 0;
 var habilidade_ativa = 0;
 var habilidade_nome = '';
+var velocidadeNarrador = 1;
 var especial = 1;
 var enemyHP = 100;
 var playerHP = 100;
@@ -45,7 +46,7 @@ const Lutador   =     new Habilidade_Passiva("Lutador", 20, 20, 0, 0, 0);
 const Habilidoso   = new Habilidade_Passiva("Habilidoso", -10, 0, 10, 0, 2);
 habilidades.push(Resistente, Berzeker, Vampirismo, Balanceado, Lutador, Habilidoso);
 // habilidades ativas
-var habilidade_ativas = ["💚 Regenerar", "⚔️ Ataque Duplo", "🔨 Ataque Atordoante", "🩸 Ataque Vampirico", "💥 Mata Gigantes"];
+var habilidade_ativas = ["💚 Regenerar", "⚔️ Ataque Duplo", "🔨 Ataque Atordoante", "🩸 Ataque Vampirico", "💥 Mata Gigantes","🌌 Ataque Vingativo"];
 
 // Classe para os personagens
 class personagem{
@@ -126,7 +127,20 @@ class personagem{
                 }
                 habilidade_nome = 'Ataque Mata Gigante';
             this.habNum -= 1;
-            return 18 + (hp*18/100);
+            return 20 + (hp*20/100);
+            },
+
+            function habVinganca() {
+                if(id>0){
+                    if((this.hp>= this.vida_maxima*50/100)&&this.danoRecebido < 38||(this.hp>= this.vida_maxima*30/100)&&this.danoRecebido < 20 ){
+                        return this.efetuar_ataque();
+                    }
+                }
+                habilidade_nome = 'Ataque Vingativo';
+            this.habNum -= 1;
+            var valor = this.danoRecebido;
+            this.efetuar_cura(Math.ceil((valor + (valor * this.defesa))*this.hab_passiva.life_steal/100));
+            return Math.ceil(valor + (valor * this.defesa));
             }
         ];
     }
@@ -155,8 +169,8 @@ class personagem{
         return habilidade.call(this); // Chama a função da habilidade dentro do contexto da classe     
     }
     end_turn(){
-        this.danoRecebido = 0;
-        this.curaRecebido = 0;
+        //this.danoRecebido = 0;
+        //this.curaRecebido = 0;
     }
 }
 
@@ -196,8 +210,8 @@ function selectHabAt(num){
     buttonSound();
     focarElemento(document.getElementById('nomeJogo'));//acessibilidade
     habilidade_ativa = num;
-    document.getElementById("habPassiva").style.display = "none";
     document.getElementById("habAtiva").style.display = "none";
+    document.getElementById('prox-btn').style.display = 'none';
     document.getElementById("battle").style.display = "block";
     document.getElementById('iniciar-btn').style.display = 'block';
     document.getElementById('attack-btn').style.display = 'none';
@@ -230,7 +244,7 @@ function createEnemy() {
     var elementName = document.getElementById("enemy-name");
     var z = Math.floor(Math.random() * 6)
     var x = habilidades[z];
-    var y = Math.floor(Math.random() * 5);
+    var y = Math.floor(Math.random() * 6);
     if(z==4){
         enemy = new personagem(1, nomeAleatorio(), x, null);
         elementName.textContent ='Oponente '+ enemy.name + ' ('+x.name+')';
@@ -244,8 +258,9 @@ function createEnemy() {
 }
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<Fluxo do jogo>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-function inicioBattle(){
-    buttonSound();
+function iniciarCombate(){
+    buttonSound()
+    document.getElementById('prox-btn').style.display = 'none';
     document.getElementById('iniciar-btn').style.display = 'none';
     document.getElementById('attack-btn').style.display = 'block';
     document.getElementById('ability-btn').style.display = 'block';
@@ -265,39 +280,40 @@ function inicioBattle(){
                     if(player.habNum>0){
                         document.getElementById('ability-btn').disabled = false;
                     }         
-                }, 3000);    
-            }, 4000);   
-        }, 2000);    
-    }, 2000);
+                }, 600*velocidadeNarrador);    
+            }, 800*velocidadeNarrador);   
+        }, 400*velocidadeNarrador);    
+    }, 400*velocidadeNarrador);
 }
 //vez do oponente
 function mudandoTurno(){
-    timer = 1500;
+    timer = 300*velocidadeNarrador; //1500 padrao
     if(player.stun==0){
         var mensagem1 = '';
         var mensagem2 = '';
         var mensagem3 = '';
         if(player.habNum != especial){
             var mensagem1 = 'Jogador usou '+habilidade_nome+'. ';
-            timer += 2000;
+            timer += 400*velocidadeNarrador;//2000 padrao
         }
         if(player.curaRecebido>0){
             var mensagem3 = 'Jogador curou '+ player.curaRecebido + ' de vida.';
-            timer += 2000;
+            timer += 400*velocidadeNarrador;//2000 padrao
         }
         if(enemy.danoRecebido>0){
             var mensagem2 = 'Oponente recebeu '+ enemy.danoRecebido+ ' de dano. ';
-            timer += 2000;
+            timer += 400*velocidadeNarrador;//2000 padrao
         }
         updateNarrador(mensagem1 + mensagem2 + mensagem3);
     }else{
         updateNarrador('Jogador está atordoado e nao pode executar ação.');
         player.stun = 0;
         stun_status = 0;
+        timer += 400*velocidadeNarrador;//2000 padrao
     }
     enemy.end_turn();
     player.end_turn();
-    timer += 500;
+    timer += 100*velocidadeNarrador; //500 padrao
     timeoutId = setTimeout(function() {
         //Teste de Vida
         if(enemyHP<=0||playerHP<=0){
@@ -305,15 +321,15 @@ function mudandoTurno(){
             return;
         }
         updateNarrador('Jogador com '+playerHP+' de vida e Oponente com '+enemyHP+' de vida.');        
-        timer = 4000;
+        timer = 800*velocidadeNarrador;//4000 padrao
         timeoutId = setTimeout(function() {
             //----------------------------------------------turno do oponente
             updateNarrador('Vez do Oponente...');
             document.getElementById('player-info').style.borderColor = 'rgb(212, 212, 212)';
             document.getElementById('enemy-info').style.borderColor = 'rgb(202 130 0)';
-            timer = 4000;
+            timer = 800*velocidadeNarrador;//4000 padrao
             timeoutId = setTimeout(function() {
-                timer = 1500;
+                timer = 300*velocidadeNarrador;//1500 padrao
                 if(enemy.stun==0){
                     var mensagem1 = '';
                     var mensagem2 = '';
@@ -324,15 +340,15 @@ function mudandoTurno(){
                     updateHP();
                     if(enemy.habNum != especial){
                         var mensagem1 = 'Oponente usou '+habilidade_nome+'. ';
-                        timer += 2000;
+                        timer += 400*velocidadeNarrador;//2000 padrao
                     }
                     if(enemy.curaRecebido>0){
                         var mensagem3 = 'Oponente curou '+ enemy.curaRecebido + ' de vida.';
-                        timer += 2000;
+                        timer += 400*velocidadeNarrador;//2000 padrao
                     }
                     if(player.danoRecebido>0){
                         var mensagem2 = 'Jogador recebeu '+ player.danoRecebido+ ' de dano. ';
-                        timer += 2000;
+                        timer += 400*velocidadeNarrador;//2000 padrao
                     }
                     updateNarrador(mensagem1 + mensagem2 + mensagem3);
                     enemy.end_turn();
@@ -341,8 +357,9 @@ function mudandoTurno(){
                     updateNarrador('Oponente está atordoado e nao pode executar ação.');
                     enemy.stun = 0;
                     stun_status = 0;
+                    timer += 400*velocidadeNarrador;//2000 padrao
                 }
-                timer += 500;
+                timer += 100*velocidadeNarrador; //500 padrao
                 timeoutId = setTimeout(function() {
                     //Teste de Vida
                     if(enemyHP<=0||playerHP<=0){
@@ -351,7 +368,7 @@ function mudandoTurno(){
                     }
                     //-------------------------------------turno do jogador
                     updateNarrador('Jogador com '+playerHP+' de vida e Oponente com '+enemyHP+' de vida.');
-                    timer = 4000;
+                    timer = 800*velocidadeNarrador; // 4000 padrao
                     timeoutId = setTimeout(function() {
                         //atualizacao de turno
                         turno++;
@@ -359,7 +376,7 @@ function mudandoTurno(){
                         updateNarrador('Iniciando turno '+ turno +', Vez do Jogador.');
                         document.getElementById('enemy-info').style.borderColor = 'rgb(212, 212, 212)';
                         document.getElementById('player-info').style.borderColor = 'rgb(202 130 0)';
-                        timer = 3000;
+                        timer = 600*velocidadeNarrador; // 3000 padrao
                         timeoutId = setTimeout(function() {
                             if(player.stun==0){
                                 updateNarrador('Jogador, escolha sua ação...');
@@ -384,17 +401,16 @@ function destiny(){
         victory();
         document.getElementById('attack-btn').style.display = 'none';
         document.getElementById('ability-btn').style.display = 'none';
-        document.getElementById('prox-btn').style.display = 'block';
     }
     if(playerHP<=0){
         defeat();
         clearTimeout(timeoutId);
         document.getElementById('attack-btn').style.display = 'none';
         document.getElementById('ability-btn').style.display = 'none';
-        document.getElementById('prox-btn').style.display = 'block';
     }
 }
 function victory() {
+    document.getElementById('prox-btn').style.display = 'block';
     numero_vitorias++;
     musicaVitoria();
     document.getElementById("vitorias").textContent = numero_vitorias;
@@ -409,8 +425,8 @@ function defeat() {
 // Função de restart
 function restart_game(){
     clearTimeout(timeoutId);
+    updateNarrador("");
     buttonSound();
-    inicioBattle();
     focarElemento(document.getElementById('nomeJogo'));
     restart_atributes();
     numero_vitorias=0;
@@ -418,20 +434,18 @@ function restart_game(){
     document.getElementById("habPassiva").style.display = "flex";
     document.getElementById("habAtiva").style.display = "none";
     document.getElementById("battle").style.display = "none";
+    document.getElementById('prox-btn').style.display = 'none';
 }
 
 function proximoOponente(){
     clearTimeout(timeoutId);
     buttonSound()
     restart_atributes();
-    document.getElementById('prox-btn').style.display = 'none';
-    document.getElementById("habPassiva").style.display = "none";
-    document.getElementById("habAtiva").style.display = "none";
-    document.getElementById("battle").style.display = "block";
     createPlayer(habilidade_passiva,habilidade_ativa);
     createEnemy();
     updateHP();
-    inicioBattle();
+    iniciarCombate();
+    document.getElementById('prox-btn').style.display = 'none';
 }
 
 function restart_atributes(){
@@ -522,7 +536,7 @@ function updateHP() {
     },1000);
     
 }
-
+/////////////////////////////////BOTOES DE ACAO/////////////////////////////////////////
 // Função de ataque
 function attack() {
     buttonSound();
@@ -676,7 +690,6 @@ function damageSound(valor) {
     gainNode.gain.linearRampToValueAtTime(sustainLevel, currentTime + attackTime + decayTime);
     gainNode.gain.setValueAtTime(sustainLevel, currentTime + duration - releaseTime);
     gainNode.gain.linearRampToValueAtTime(0, currentTime + duration);
-  
     // Conecta o oscilador ao envelope e ao destino de áudio
     oscillator.connect(gainNode);
     gainNode.connect(audioContext.destination);

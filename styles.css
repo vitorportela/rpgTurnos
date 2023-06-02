@@ -120,6 +120,11 @@ p{
     cursor: pointer;
     background-color: #dbdbdb;
   }
+
+  .prox-btn{
+    display: none;
+  }
+  
   #narrador{
     color: white;
   }

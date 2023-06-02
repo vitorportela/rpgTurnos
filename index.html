@@ -31,6 +31,7 @@
                 <button onclick="selectHabAt(2)" aria-label="Ataque Atordoante: Oponente perde o próximo turno.">🔨 Ataque Atordoante:</br>Oponente perde o próximo turno.</button>
                 <button onclick="selectHabAt(3)" aria-label="Ataque Vampirico: Aplica dano e cura a quantidade de dano aplicado.">🩸 Ataque Vampirico:</br>Aplica dano e cura a quantidade de dano aplicado.</button>
                 <button onclick="selectHabAt(4)" aria-label="Mata Gigantes: Aplica dano igual a 40% da vida do oponente.">💥 Mata Gigantes:</br>Aplica dano igual a 40% da vida do oponente.</button>
+                <button onclick="selectHabAt(5)" aria-label="Ataque Vingativo: Aplica dano igual ao ultimo dano recebido.">🌌 Ataque Vingativo:</br>Aplica dano igual ao ultimo dano recebido.</button>
             </div>
 
             <div id="battle" style="display: none;">
@@ -53,7 +54,7 @@
 
                     <div id="buttons">
                         <!-- Botões de ação -->
-                        <button id="iniciar-btn" onclick="inicioBattle()">Iniciar Combate</button>
+                        <button id="iniciar-btn" onclick="iniciarCombate()">Iniciar Combate</button>
                         <button disabled id="attack-btn" onclick="attack()" aria-label="Ataque básico">🗡️ Ataque básico</button>
                         <button disabled id="ability-btn" onclick="ability()">Habilidade</button>
                         <button id="prox-btn" onclick="proximoOponente()">Próximo Oponente </button>
